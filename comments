@@ -1,0 +1,1 @@
+I would have changed the properties of the models to be readonly and set them in a constructor, but I am unsure if this is allowed.
