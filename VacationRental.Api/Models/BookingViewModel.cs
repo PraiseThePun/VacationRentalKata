@@ -8,6 +8,7 @@ namespace VacationRental.Api.Models
         public int RentalId { get; set; }
         public DateTime Start { get; set; }
         public int Nights { get; set; }
+        public int Unit { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -17,7 +18,8 @@ namespace VacationRental.Api.Models
                 return this.Id == that.Id
                     && this.RentalId == that.RentalId
                     && this.Start == that.Start
-                    && this.Nights == this.Nights;
+                    && this.Nights == that.Nights
+                    && this.Unit == that.Unit;
             }
 
             return false;

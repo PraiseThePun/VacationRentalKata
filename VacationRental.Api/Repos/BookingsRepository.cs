@@ -21,7 +21,7 @@ namespace VacationRental.Api.Repos
 
         public void Add(BookingBindingModel model, ResourceIdViewModel key)
         {
-            var rental = rentalsRepo.Find(model.RentalId);
+            var rental = FindRental(model.RentalId);
             Validate(model);
 
             var count = FindRentals(model);
@@ -33,18 +33,20 @@ namespace VacationRental.Api.Repos
                 Id = key.Id,
                 Nights = model.Nights,
                 RentalId = model.RentalId,
-                Start = model.Start.Date
+                Start = model.Start.Date,
+                Unit = model.Unit
             });
         }
 
         private int FindRentals(BookingBindingModel model)
         {
-            var rental = rentalsRepo.Find(model.RentalId);
-            var preparationNights = rental.PreparationTimeInDays;
+            var rental = FindRental(model.RentalId);
+            var preparationNights = rental?.PreparationTimeInDays ?? 0;
 
             if (bookings?.Count > 0)
             {
-                var filteredList = bookings.Values.Where(x => x.RentalId == model.RentalId
+                var filteredList = bookings.Values.Where(x => (x.RentalId == model.RentalId
+                            && x.Unit == model.Unit)
                             && (x.Start <= model.Start.Date && x.Start.AddDays(x.Nights + preparationNights) > model.Start.Date)
                             || (x.Start < model.Start.AddDays(model.Nights + preparationNights) && x.Start.AddDays(x.Nights + preparationNights) >= model.Start.AddDays(model.Nights + preparationNights))
                             || (x.Start > model.Start && x.Start.AddDays(x.Nights + preparationNights) < model.Start.AddDays(model.Nights + preparationNights)));
@@ -53,6 +55,11 @@ namespace VacationRental.Api.Repos
             }
 
             return 0;
+        }
+
+        public RentalViewModel FindRental(int rentalId)
+        {
+            return rentalsRepo.Find(rentalId);
         }
 
         public BookingViewModel Find(int id)
@@ -80,6 +87,11 @@ namespace VacationRental.Api.Repos
             };
 
             return bookings[id];
+        }
+
+        public IDictionary<int, BookingViewModel> GetAllBookings()
+        {
+            return bookings;
         }
 
         private void CheckExists(int id)
