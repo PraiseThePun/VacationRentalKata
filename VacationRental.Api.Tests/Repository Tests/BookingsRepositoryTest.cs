@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using VacationRental.Api.Models;
 using VacationRental.Api.Repos;
 using Xunit;

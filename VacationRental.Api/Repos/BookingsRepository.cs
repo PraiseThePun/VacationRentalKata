@@ -8,25 +8,24 @@ namespace VacationRental.Api.Repos
 {
     public class BookingsRepository : IRepository<BookingViewModel, ResourceIdViewModel, BookingBindingModel>
     {
-        private readonly IDictionary<int, RentalViewModel> rentals;
+        private readonly RentalsRepository rentalsRepo;
         private readonly IDictionary<int, BookingViewModel> bookings;
 
         public BookingsRepository(
             IDictionary<int, RentalViewModel> rentals,
             IDictionary<int, BookingViewModel> bookings)
         {
-            this.rentals = rentals;
+            this.rentalsRepo = new RentalsRepository(rentals);
             this.bookings = bookings;
         }
 
         public void Add(BookingBindingModel model, ResourceIdViewModel key)
         {
-            if (!rentals.ContainsKey(model.RentalId))
-                throw new ApplicationException("Rental not found");
+            var rental = rentalsRepo.Find(model.RentalId);
             Validate(model);
 
             var count = FindRentals(model);
-            if (count >= rentals[model.RentalId].Units)
+            if (count >= rental.Units)
                 throw new ApplicationException("Not available");
 
             bookings.Add(key.Id, new BookingViewModel
@@ -40,7 +39,8 @@ namespace VacationRental.Api.Repos
 
         private int FindRentals(BookingBindingModel model)
         {
-            var preparationNights = rentals[model.RentalId].PreparationTimeInDays;
+            var rental = rentalsRepo.Find(model.RentalId);
+            var preparationNights = rental.PreparationTimeInDays;
 
             if (bookings?.Count > 0)
             {
