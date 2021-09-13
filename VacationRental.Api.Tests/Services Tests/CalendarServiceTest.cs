@@ -55,7 +55,7 @@ namespace VacationRental.Api.Tests.Services_Tests
 
             var actual = calendarService.CreateCalendarView(1, DateTime.Today, 1);
 
-            Assert.Equal(expected.Dates, actual.Dates);
+            Assert.Equal(expected, actual);
         }
     }
 }

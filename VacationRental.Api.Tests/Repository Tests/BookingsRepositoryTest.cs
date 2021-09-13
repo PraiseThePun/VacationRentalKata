@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using VacationRental.Api.Models;
-using VacationRental.Api.Repos;
+using VacationRental.Api.Services;
 using Xunit;
 
 namespace VacationRental.Api.Tests
 {
     public class BookingsRepositoryTest
     {
-        private BookingsRepository bookingsRepository;
+        private BookingService bookingsService;
         private readonly BookingBindingModel testModel;
         private readonly ResourceIdViewModel testKey;
         private readonly RentalViewModel testRental;
@@ -26,7 +26,7 @@ namespace VacationRental.Api.Tests
 
             bookings = new Dictionary<int, BookingViewModel>();
 
-            bookingsRepository = new BookingsRepository(rentals, bookings);
+            bookingsService = new BookingService(rentals, bookings);
 
             testModel = new BookingBindingModel() { Nights = 1, RentalId = 1, Start = DateTime.Today, Unit = 1 };
             testKey = new ResourceIdViewModel() { Id = ID };
@@ -36,15 +36,17 @@ namespace VacationRental.Api.Tests
         public void FindThrowsExceptionIfDictionaryDoesNotContainTheGivenKey()
         {
             bookings.Clear();
-            bookingsRepository = new BookingsRepository(rentals, bookings);
-            Assert.Throws<ApplicationException>(() => bookingsRepository.Find(ID));
+            bookingsService = new BookingService(rentals, bookings);
+
+            Assert.Throws<ApplicationException>(() => bookingsService.Find(ID));
         }
 
         [Fact]
         public void AddFailsIfRentalDoesNotExist()
         {
             var bindingModel = new BookingBindingModel() { Nights = 1, RentalId = 2, Start = DateTime.Today, Unit = 1 };
-            var exception = Assert.Throws<ApplicationException>(() => bookingsRepository.Add(bindingModel, testKey));
+            var exception = Assert.Throws<ApplicationException>(() => bookingsService.Add(bindingModel, testKey));
+
             Assert.Equal("Rental not found", exception.Message);
         }
 
@@ -53,7 +55,7 @@ namespace VacationRental.Api.Tests
         {
             var invalidModel = new BookingBindingModel() { Nights = 0, RentalId = ID, Start = DateTime.Today, Unit = 1 };
 
-            var exception = Assert.Throws<ApplicationException>(() => bookingsRepository.Add(invalidModel, testKey));
+            var exception = Assert.Throws<ApplicationException>(() => bookingsService.Add(invalidModel, testKey));
             Assert.Equal("Nigts must be positive", exception.Message);
         }
 
@@ -63,7 +65,7 @@ namespace VacationRental.Api.Tests
             var mod = new BookingViewModel() { Id = 2, Nights = 1, RentalId = ID, Start = DateTime.Today, Unit = 1 };
             bookings.Add(2, mod);
 
-            var tempBookingsRepository = new BookingsRepository(rentals, bookings);
+            var tempBookingsRepository = new BookingService(rentals, bookings);
 
             var exception = Assert.Throws<ApplicationException>(() => tempBookingsRepository.Add(testModel, testKey));
             Assert.Equal("Not available", exception.Message);
@@ -72,21 +74,21 @@ namespace VacationRental.Api.Tests
         [Fact]
         public void AddAddsOneElementToTheDictionary()
         {
-            Assert.Throws<ApplicationException>(() => bookingsRepository.Find(ID));
+            Assert.Throws<ApplicationException>(() => bookingsService.Find(ID));
 
-            bookingsRepository.Add(testModel, testKey);
+            bookingsService.Add(testModel, testKey);
 
-            Assert.NotNull(bookingsRepository.Find(ID));
+            Assert.NotNull(bookingsService.Find(ID));
         }
 
         [Fact]
         public void GetNextKeyReturnsTheNextIdValue()
         {
-            Assert.Equal(1, bookingsRepository.GetNextKey());
+            Assert.Equal(1, bookingsService.GetNextKey());
 
-            bookingsRepository.Add(testModel, testKey);
+            bookingsService.Add(testModel, testKey);
 
-            Assert.Equal(2, bookingsRepository.GetNextKey());
+            Assert.Equal(2, bookingsService.GetNextKey());
         }
 
         [Fact]
@@ -94,10 +96,10 @@ namespace VacationRental.Api.Tests
         {
             var expected = new BookingViewModel() { Id = ID, Nights = testModel.Nights, RentalId = testModel.RentalId, Start = testModel.Start, Unit = testModel.Unit };
 
-            Assert.Throws<ApplicationException>(() => bookingsRepository.Find(ID));
+            Assert.Throws<ApplicationException>(() => bookingsService.Find(ID));
 
-            bookingsRepository.Add(testModel, testKey);
-            var actual = bookingsRepository.Find(ID);
+            bookingsService.Add(testModel, testKey);
+            var actual = bookingsService.Find(ID);
 
             Assert.Equal(expected, actual);
         }
@@ -105,31 +107,23 @@ namespace VacationRental.Api.Tests
         [Fact]
         public void UpdateFailsIfTheObjectDoesNotExistInDictionary()
         {
-            Assert.Throws<ApplicationException>(() => bookingsRepository.Update(ID, testModel));
+            Assert.Throws<ApplicationException>(() => bookingsService.Update(ID, testModel));
         }
 
         [Fact]
         public void UpdateModifiesAnObject()
         {
-            bookingsRepository.Add(testModel, testKey);
+            bookingsService.Add(testModel, testKey);
 
-            Assert.Equal(1, bookingsRepository.Find(ID).Nights);
-            Assert.Equal(DateTime.Today, bookingsRepository.Find(ID).Start);
+            Assert.Equal(1, bookingsService.Find(ID).Nights);
+            Assert.Equal(DateTime.Today, bookingsService.Find(ID).Start);
 
             var modifiedModel = new BookingBindingModel() { Nights = 2, RentalId = ID, Start = DateTime.MinValue };
 
-            bookingsRepository.Update(ID, modifiedModel);
+            bookingsService.Update(ID, modifiedModel);
 
-            Assert.Equal(2, bookingsRepository.Find(ID).Nights);
-            Assert.Equal(DateTime.MinValue, bookingsRepository.Find(ID).Start);
-        }
-
-        [Fact]
-        public void GetAllBookingsReturnsTheBookingDictionary()
-        {
-            var actual = bookingsRepository.GetAllBookings();
-
-            Assert.Equal(bookings, actual);
+            Assert.Equal(2, bookingsService.Find(ID).Nights);
+            Assert.Equal(DateTime.MinValue, bookingsService.Find(ID).Start);
         }
     }
 }

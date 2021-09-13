@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using VacationRental.Api.Models;
 
 namespace VacationRental.Api.Repos
@@ -21,13 +18,6 @@ namespace VacationRental.Api.Repos
 
         public void Add(BookingBindingModel model, ResourceIdViewModel key)
         {
-            var rental = FindRental(model.RentalId);
-            Validate(model);
-
-            var count = FindRentals(model);
-            if (count >= rental.Units)
-                throw new ApplicationException("Not available");
-
             bookings.Add(key.Id, new BookingViewModel
             {
                 Id = key.Id,
@@ -38,25 +28,6 @@ namespace VacationRental.Api.Repos
             });
         }
 
-        private int FindRentals(BookingBindingModel model)
-        {
-            var rental = FindRental(model.RentalId);
-            var preparationNights = rental?.PreparationTimeInDays ?? 0;
-
-            if (bookings?.Count > 0)
-            {
-                var filteredList = bookings.Values.Where(x => (x.RentalId == model.RentalId
-                            && x.Unit == model.Unit)
-                            && (x.Start <= model.Start.Date && x.Start.AddDays(x.Nights + preparationNights) > model.Start.Date)
-                            || (x.Start < model.Start.AddDays(model.Nights + preparationNights) && x.Start.AddDays(x.Nights + preparationNights) >= model.Start.AddDays(model.Nights + preparationNights))
-                            || (x.Start > model.Start && x.Start.AddDays(x.Nights + preparationNights) < model.Start.AddDays(model.Nights + preparationNights)));
-
-                return filteredList.Count();
-            }
-
-            return 0;
-        }
-
         public RentalViewModel FindRental(int rentalId)
         {
             return rentalsRepo.Find(rentalId);
@@ -64,8 +35,6 @@ namespace VacationRental.Api.Repos
 
         public BookingViewModel Find(int id)
         {
-            CheckExists(id);
-
             return bookings[id];
         }
 
@@ -76,8 +45,6 @@ namespace VacationRental.Api.Repos
 
         public BookingViewModel Update(int id, BookingBindingModel value)
         {
-            CheckExists(id);
-
             bookings[id] = new BookingViewModel()
             {
                 Id = id,
@@ -92,18 +59,6 @@ namespace VacationRental.Api.Repos
         public IDictionary<int, BookingViewModel> GetAllBookings()
         {
             return bookings;
-        }
-
-        private void CheckExists(int id)
-        {
-            if (!bookings.ContainsKey(id))
-                throw new ApplicationException("Booking not found");
-        }
-
-        private void Validate(BookingBindingModel model)
-        {
-            if (model.Nights <= 0)
-                throw new ApplicationException("Nigts must be positive");
         }
     }
 }
