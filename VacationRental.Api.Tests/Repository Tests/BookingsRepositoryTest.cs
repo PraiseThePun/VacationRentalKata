@@ -23,7 +23,7 @@ namespace VacationRental.Api.Tests
             {
                 { ID, testRental }
             };
-            
+
             bookings = new Dictionary<int, BookingViewModel>();
 
             bookingsRepository = new BookingsRepository(rentals, bookings);

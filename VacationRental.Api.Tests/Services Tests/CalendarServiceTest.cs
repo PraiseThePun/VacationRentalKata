@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using VacationRental.Api.Models;
-using VacationRental.Api.Repos;
 using VacationRental.Api.Services;
 using Xunit;
 
@@ -14,7 +12,6 @@ namespace VacationRental.Api.Tests.Services_Tests
         private readonly RentalViewModel testRental;
         private readonly Dictionary<int, RentalViewModel> rentals;
         private readonly Dictionary<int, BookingViewModel> bookings;
-        private readonly BookingsRepository bookingsRepository;
         private const int ID = 1;
 
         public CalendarServiceTest()
@@ -32,7 +29,6 @@ namespace VacationRental.Api.Tests.Services_Tests
             };
 
             calendarService = new CalendarService(rentals, bookings);
-            bookingsRepository = new BookingsRepository(rentals, bookings);
         }
 
         [Fact]
