@@ -6,7 +6,7 @@ using Xunit;
 
 namespace VacationRental.Api.Tests
 {
-    public class BookingsRepositoryTest
+    public class BookingServiceTest
     {
         private BookingService bookingsService;
         private readonly BookingBindingModel testModel;
@@ -16,7 +16,7 @@ namespace VacationRental.Api.Tests
         private readonly Dictionary<int, BookingViewModel> bookings;
         private const int ID = 1;
 
-        public BookingsRepositoryTest()
+        public BookingServiceTest()
         {
             testRental = new RentalViewModel() { Id = ID, PreparationTimeInDays = 1, Units = 1 };
             rentals = new Dictionary<int, RentalViewModel>
