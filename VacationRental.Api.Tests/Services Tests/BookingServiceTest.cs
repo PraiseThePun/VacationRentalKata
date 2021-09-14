@@ -18,7 +18,7 @@ namespace VacationRental.Api.Tests
 
         public BookingServiceTest()
         {
-            testRental = new RentalViewModel() { Id = ID, PreparationTimeInDays = 1, Units = 1 };
+            testRental = new RentalViewModel(ID, 1, 1);
             rentals = new Dictionary<int, RentalViewModel>
             {
                 { ID, testRental }

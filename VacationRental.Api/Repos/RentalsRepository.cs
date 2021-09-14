@@ -14,12 +14,7 @@ namespace VacationRental.Api.Repos
 
         public void Add(RentalBindingModel model, ResourceIdViewModel key)
         {
-            rentals.Add(key.Id, new RentalViewModel
-            {
-                Id = key.Id,
-                Units = model.Units,
-                PreparationTimeInDays = model.PreparationTimeInDays
-            });
+            rentals.Add(key.Id, new RentalViewModel(key.Id, model.Units, model.PreparationTimeInDays));
         }
 
         public RentalViewModel Find(int id)
@@ -29,12 +24,7 @@ namespace VacationRental.Api.Repos
 
         public RentalViewModel Update(int id, RentalBindingModel value)
         {
-            rentals[id] = new RentalViewModel()
-            {
-                Id = id,
-                Units = value.Units,
-                PreparationTimeInDays = value.PreparationTimeInDays
-            };
+            rentals[id] = new RentalViewModel(id, value.Units, value.PreparationTimeInDays);
 
             return rentals[id];
         }

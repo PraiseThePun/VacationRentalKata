@@ -16,7 +16,7 @@ namespace VacationRental.Api.Tests.Services_Tests
 
         public CalendarServiceTest()
         {
-            testRental = new RentalViewModel() { Id = ID, PreparationTimeInDays = 1, Units = 1 };
+            testRental = new RentalViewModel(ID, 1, 1);
             rentals = new Dictionary<int, RentalViewModel>
             {
                 { ID, testRental }

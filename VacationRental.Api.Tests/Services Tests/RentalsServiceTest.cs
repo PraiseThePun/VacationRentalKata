@@ -57,7 +57,7 @@ namespace VacationRental.Api.Tests
         [Fact]
         public void FindReturnsTheRequestedObjectIfItExistsInDictionary()
         {
-            var expected = new RentalViewModel() { Id = ID, PreparationTimeInDays = testModel.PreparationTimeInDays, Units = testModel.Units };
+            var expected = new RentalViewModel(ID, testModel.Units, testModel.PreparationTimeInDays);
 
             Assert.Throws<ApplicationException>(() => rentalService.Find(ID));
 

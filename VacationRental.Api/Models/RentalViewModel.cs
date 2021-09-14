@@ -2,9 +2,16 @@
 {
     public class RentalViewModel
     {
-        public int Id { get; set; }
-        public int Units { get; set; }
-        public int PreparationTimeInDays { get; set; }
+        public RentalViewModel(int id, int units, int preparationTimeInDays)
+        {
+            Id = id;
+            Units = units;
+            PreparationTimeInDays = preparationTimeInDays;
+        }
+
+        public int Id { get; }
+        public int Units { get; }
+        public int PreparationTimeInDays { get; }
 
         public override bool Equals(object obj)
         {
