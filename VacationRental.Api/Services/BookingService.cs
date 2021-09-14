@@ -62,18 +62,18 @@ namespace VacationRental.Api.Services
 
         private int FindRentals(BookingBindingModel model)
         {
-            var rental = rentalService.Find(model.RentalId);
-            var preparationNights = rental?.PreparationTimeInDays ?? 0;
-
-            var bookings = bookingsRepository.GetAllBookings();
+            var bookings = bookingsRepository.FindBookingsByRentalId(model.RentalId);
 
             if (bookings?.Count > 0)
             {
-                var filteredList = bookings.Values.Where(x => (x.RentalId == model.RentalId
-                            && x.Unit == model.Unit)
+                var rental = rentalService.Find(model.RentalId);
+                var preparationNights = rental?.PreparationTimeInDays ?? 0;
+                var blockedNights = model.Nights + preparationNights;
+
+                var filteredList = bookings.Values.Where(x =>  x.Unit == model.Unit
                             && (x.Start <= model.Start.Date && x.Start.AddDays(x.Nights + preparationNights) > model.Start.Date)
-                            || (x.Start < model.Start.AddDays(model.Nights + preparationNights) && x.Start.AddDays(x.Nights + preparationNights) >= model.Start.AddDays(model.Nights + preparationNights))
-                            || (x.Start > model.Start && x.Start.AddDays(x.Nights + preparationNights) < model.Start.AddDays(model.Nights + preparationNights)));
+                            || (x.Start < model.Start.AddDays(blockedNights) && x.Start.AddDays(x.Nights + preparationNights) >= model.Start.AddDays(blockedNights))
+                            || (x.Start > model.Start && x.Start.AddDays(x.Nights + preparationNights) < model.Start.AddDays(blockedNights)));
 
                 return filteredList.Count();
             }

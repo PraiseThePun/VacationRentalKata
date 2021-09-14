@@ -22,7 +22,7 @@ namespace VacationRental.Api.Tests.Services_Tests
                 { ID, testRental }
             };
 
-            var testBooking = new BookingViewModel() { Id = ID, Nights = 1, RentalId = ID, Start = DateTime.Today, Unit = 1 };
+            var testBooking = new BookingViewModel(ID, ID, DateTime.Today, 1, 1);
             bookings = new Dictionary<int, BookingViewModel>
             {
                 { ID, testBooking }

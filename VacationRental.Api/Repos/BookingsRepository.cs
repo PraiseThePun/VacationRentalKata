@@ -15,14 +15,7 @@ namespace VacationRental.Api.Repos
 
         public void Add(BookingBindingModel model, ResourceIdViewModel key)
         {
-            bookings.Add(key.Id, new BookingViewModel
-            {
-                Id = key.Id,
-                Nights = model.Nights,
-                RentalId = model.RentalId,
-                Start = model.Start.Date,
-                Unit = model.Unit
-            });
+            bookings.Add(key.Id, new BookingViewModel(key.Id, model.RentalId, model.Start.Date, model.Nights, model.Unit));
         }
 
         public BookingViewModel Find(int id)
@@ -37,13 +30,7 @@ namespace VacationRental.Api.Repos
 
         public BookingViewModel Update(int id, BookingBindingModel value)
         {
-            bookings[id] = new BookingViewModel()
-            {
-                Id = id,
-                Nights = value.Nights,
-                RentalId = value.RentalId,
-                Start = value.Start
-            };
+            bookings[id] = new BookingViewModel(id, value.RentalId, value.Start, value.Nights, value.Unit);
 
             return bookings[id];
         }

@@ -4,11 +4,26 @@ namespace VacationRental.Api.Models
 {
     public class BookingViewModel
     {
-        public int Id { get; set; }
-        public int RentalId { get; set; }
-        public DateTime Start { get; set; }
-        public int Nights { get; set; }
-        public int Unit { get; set; }
+        public BookingViewModel(int id, int rentalId, DateTime start, int nights, int unit)
+        {
+            this.Id = id;
+            this.RentalId = rentalId;
+            this.Start = start;
+            this.Nights = nights;
+            this.Unit = unit;
+        }
+
+        public int Id { get; }
+        public int RentalId { get; }
+        public DateTime Start { get; }
+        public int Nights { get; }
+        public int Unit { get; }
+
+        //public int Id { get; set; }
+        //public int RentalId { get; set; }
+        //public DateTime Start { get; set; }
+        //public int Nights { get; set; }
+        //public int Unit { get; set; }
 
         public override bool Equals(object obj)
         {

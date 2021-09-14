@@ -62,7 +62,7 @@ namespace VacationRental.Api.Tests
         [Fact]
         public void AddFailsIfModelHasMoreUnitsThanRental()
         {
-            var mod = new BookingViewModel() { Id = 2, Nights = 1, RentalId = ID, Start = DateTime.Today, Unit = 1 };
+            var mod = new BookingViewModel(ID, ID, DateTime.Today, 1, 1);
             bookings.Add(2, mod);
 
             var tempBookingsRepository = new BookingService(rentals, bookings);
@@ -94,7 +94,7 @@ namespace VacationRental.Api.Tests
         [Fact]
         public void FindReturnsTheRequestedObjectIfItExistsInDictionary()
         {
-            var expected = new BookingViewModel() { Id = ID, Nights = testModel.Nights, RentalId = testModel.RentalId, Start = testModel.Start, Unit = testModel.Unit };
+            var expected = new BookingViewModel(ID, testModel.RentalId, testModel.Start, testModel.Nights, testModel.Unit);
 
             Assert.Throws<ApplicationException>(() => bookingsService.Find(ID));
 
@@ -129,12 +129,12 @@ namespace VacationRental.Api.Tests
         [Fact]
         public void FindBookingsByIdReturnsByRequestedId()
         {
-            var expectedBooking = new BookingViewModel() { Id = ID, Nights = 1, RentalId = 1, Start = DateTime.Today, Unit = 1 };
+            var expectedBooking = new BookingViewModel(ID, ID, DateTime.Today, 1, 1);
             var expectedDictionary = new Dictionary<int, BookingViewModel>()
             {
                 {1, expectedBooking }
             };
-            var ignoredBooking = new BookingViewModel() { Id = ID, Nights = 1, RentalId = 2, Start = DateTime.Today, Unit = 1 };
+            var ignoredBooking = new BookingViewModel(ID, 2, DateTime.Today, 1, 1);
             var bookingsDictionary = new Dictionary<int, BookingViewModel>
             {
                 { 1, expectedBooking },
