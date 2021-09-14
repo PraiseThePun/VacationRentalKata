@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using VacationRental.Api.Models;
 
 namespace VacationRental.Api.Repos
@@ -25,15 +24,11 @@ namespace VacationRental.Api.Repos
 
         public RentalViewModel Find(int id)
         {
-            CheckExists(id);
-
             return rentals[id];
         }
 
         public RentalViewModel Update(int id, RentalBindingModel value)
         {
-            CheckExists(id);
-
             rentals[id] = new RentalViewModel()
             {
                 Id = id,
@@ -44,15 +39,9 @@ namespace VacationRental.Api.Repos
             return rentals[id];
         }
 
-        public int GetNextKey()
+        public IDictionary<int, RentalViewModel> GetAllRentals()
         {
-            return rentals.Keys.Count + 1;
-        }
-
-        private void CheckExists(int id)
-        {
-            if (!rentals.ContainsKey(id))
-                throw new ApplicationException("Rental not found");
+            return rentals;
         }
     }
 }

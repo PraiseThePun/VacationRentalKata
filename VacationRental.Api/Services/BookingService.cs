@@ -8,52 +8,59 @@ namespace VacationRental.Api.Services
 {
     public class BookingService : IService<BookingViewModel, ResourceIdViewModel, BookingBindingModel>
     {
-        private readonly BookingsRepository repository;
+        private readonly BookingsRepository bookingsRepository;
+        private readonly RentalService rentalService;
 
         public BookingService(
             IDictionary<int, RentalViewModel> rentals,
             IDictionary<int, BookingViewModel> bookings)
         {
-            repository = new BookingsRepository(rentals, bookings);
+            bookingsRepository = new BookingsRepository(bookings);
+            rentalService = new RentalService(rentals);
         }
 
         public void Add(BookingBindingModel model, ResourceIdViewModel key)
         {
-            var rental = repository.FindRental(model.RentalId);
+            var rental = rentalService.Find(model.RentalId);
             Validate(model);
 
             var count = FindRentals(model);
             if (count >= rental.Units)
                 throw new ApplicationException("Not available");
 
-            repository.Add(model, key);
+            bookingsRepository.Add(model, key);
         }
 
         public BookingViewModel Find(int id)
         {
             CheckExists(id);
 
-            return repository.Find(id);
+            return bookingsRepository.Find(id);
         }
 
         public BookingViewModel Update(int id, BookingBindingModel value)
         {
             CheckExists(id);
 
-            return repository.Update(id, value);
+            return bookingsRepository.Update(id, value);
         }
 
         public int GetNextKey()
         {
-            return repository.GetNextKey();
+            return bookingsRepository.GetAllBookings().Keys.Count + 1;
+        }
+
+        public IDictionary<int, BookingViewModel> GetAllBookings()
+        {
+            return bookingsRepository.GetAllBookings();
         }
 
         private int FindRentals(BookingBindingModel model)
         {
-            var rental = repository.FindRental(model.RentalId);
+            var rental = rentalService.Find(model.RentalId);
             var preparationNights = rental?.PreparationTimeInDays ?? 0;
 
-            var bookings = repository.GetAllBookings();
+            var bookings = bookingsRepository.GetAllBookings();
 
             if (bookings?.Count > 0)
             {
@@ -77,7 +84,7 @@ namespace VacationRental.Api.Services
 
         private void CheckExists(int id)
         {
-            if (!repository.GetAllBookings().ContainsKey(id))
+            if (!bookingsRepository.GetAllBookings().ContainsKey(id))
                 throw new ApplicationException("Booking not found");
         }
     }

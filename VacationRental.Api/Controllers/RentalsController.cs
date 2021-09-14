@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using VacationRental.Api.Models;
-using VacationRental.Api.Repos;
+using VacationRental.Api.Services;
 
 namespace VacationRental.Api.Controllers
 {
@@ -9,26 +9,26 @@ namespace VacationRental.Api.Controllers
     [ApiController]
     public class RentalsController : ControllerBase
     {
-        private readonly RentalsRepository rentalsRepository;
+        private readonly RentalService rentalService;
 
         public RentalsController(IDictionary<int, RentalViewModel> rentals)
         {
-            rentalsRepository = new RentalsRepository(rentals);
+            rentalService = new RentalService(rentals);
         }
 
         [HttpGet]
         [Route("{rentalId:int}")]
         public RentalViewModel Get(int rentalId)
         {
-            return rentalsRepository.Find(rentalId);
+            return rentalService.Find(rentalId);
         }
 
         [HttpPost]
         public ResourceIdViewModel Post(RentalBindingModel model)
         {
-            var key = new ResourceIdViewModel { Id = rentalsRepository.GetNextKey() };
+            var key = new ResourceIdViewModel { Id = rentalService.GetNextKey() };
 
-            rentalsRepository.Add(model, key);
+            rentalService.Add(model, key);
 
             return key;
         }
@@ -37,7 +37,7 @@ namespace VacationRental.Api.Controllers
         [Route("api/v1/rentals/{id}")]
         public RentalViewModel Update(int id, RentalBindingModel model)
         {
-            return rentalsRepository.Update(id, model);
+            return rentalService.Update(id, model);
         }
     }
 }

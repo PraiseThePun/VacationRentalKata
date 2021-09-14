@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using VacationRental.Api.Models;
-using VacationRental.Api.Repos;
 
 namespace VacationRental.Api.Services
 {
     public class CalendarService
     {
-        private readonly BookingsRepository bookingsRepository;
+        private readonly BookingService bookingService;
+        private readonly RentalService rentalService;
 
         public CalendarService(IDictionary<int, RentalViewModel> rentals,
             IDictionary<int, BookingViewModel> bookings)
         {
-            bookingsRepository = new BookingsRepository(rentals, bookings);
+            bookingService = new BookingService(rentals, bookings);
+            rentalService = new RentalService(rentals);
         }
 
         public CalendarViewModel CreateCalendarView(int rentalId, DateTime start, int nights)
@@ -30,9 +31,9 @@ namespace VacationRental.Api.Services
                     PreparationTimes = new List<PreparationTimeViewModel>()
                 };
 
-                foreach (var booking in bookingsRepository.GetAllBookings().Values)
+                foreach (var booking in bookingService.GetAllBookings().Values)
                 {
-                    var rental = bookingsRepository.FindRental(booking.RentalId);
+                    var rental = rentalService.Find(booking.RentalId);
 
                     if (booking.RentalId == rentalId
                         && booking.Start <= date.Date && booking.Start.AddDays(booking.Nights + rental.PreparationTimeInDays) > date.Date)
@@ -56,7 +57,7 @@ namespace VacationRental.Api.Services
         {
             if (nights < 0)
                 throw new ApplicationException("Nights must be positive");
-            _ = bookingsRepository.FindRental(rentalId);
+            _ = rentalService.Find(rentalId);
         }
     }
 }

@@ -5,14 +5,10 @@ namespace VacationRental.Api.Repos
 {
     public class BookingsRepository : IRepository<BookingViewModel, ResourceIdViewModel, BookingBindingModel>
     {
-        private readonly RentalsRepository rentalsRepo;
         private readonly IDictionary<int, BookingViewModel> bookings;
 
-        public BookingsRepository(
-            IDictionary<int, RentalViewModel> rentals,
-            IDictionary<int, BookingViewModel> bookings)
+        public BookingsRepository(IDictionary<int, BookingViewModel> bookings)
         {
-            this.rentalsRepo = new RentalsRepository(rentals);
             this.bookings = bookings;
         }
 
@@ -28,19 +24,9 @@ namespace VacationRental.Api.Repos
             });
         }
 
-        public RentalViewModel FindRental(int rentalId)
-        {
-            return rentalsRepo.Find(rentalId);
-        }
-
         public BookingViewModel Find(int id)
         {
             return bookings[id];
-        }
-
-        public int GetNextKey()
-        {
-            return bookings.Keys.Count + 1;
         }
 
         public BookingViewModel Update(int id, BookingBindingModel value)
