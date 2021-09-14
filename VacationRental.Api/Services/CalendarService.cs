@@ -31,11 +31,7 @@ namespace VacationRental.Api.Services
                 dates.Add(date);
             }
 
-            return new CalendarViewModel()
-            {
-                RentalId = rentalId,
-                Dates = dates
-            };
+            return new CalendarViewModel(rentalId, dates);
         }
 
         private void FindRentalBookings(int rentalId, CalendarDateViewModel date)
