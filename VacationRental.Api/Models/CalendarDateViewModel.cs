@@ -6,9 +6,16 @@ namespace VacationRental.Api.Models
 {
     public class CalendarDateViewModel
     {
-        public DateTime Date { get; set; }
-        public List<CalendarBookingViewModel> Bookings { get; set; }
-        public List<PreparationTimeViewModel> PreparationTimes { get; set; }
+        public CalendarDateViewModel(DateTime date, List<CalendarBookingViewModel> bookings, List<PreparationTimeViewModel> preparationTimes)
+        {
+            Date = date;
+            Bookings = bookings;
+            PreparationTimes = preparationTimes;
+        }
+
+        public DateTime Date { get; }
+        public List<CalendarBookingViewModel> Bookings { get; }
+        public List<PreparationTimeViewModel> PreparationTimes { get; }
 
         public override bool Equals(object obj)
         {

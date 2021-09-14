@@ -50,7 +50,7 @@ namespace VacationRental.Api.Tests.Services_Tests
         {
             var bookings = new List<CalendarBookingViewModel>() { new CalendarBookingViewModel(1, 1)};
             var preparationTimes = new List<PreparationTimeViewModel>() { new PreparationTimeViewModel() { Unit = 1 } };
-            var dates = new List<CalendarDateViewModel>() { new CalendarDateViewModel() { Date = DateTime.Today, Bookings = bookings, PreparationTimes = preparationTimes } };
+            var dates = new List<CalendarDateViewModel>() { new CalendarDateViewModel(DateTime.Today, bookings, preparationTimes) };
             var expected = new CalendarViewModel() { Dates = dates, RentalId = ID };
 
             var actual = calendarService.CreateCalendarView(1, DateTime.Today, 1);

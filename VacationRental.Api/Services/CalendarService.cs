@@ -54,12 +54,7 @@ namespace VacationRental.Api.Services
 
         private static CalendarDateViewModel CreateView(DateTime start, int i)
         {
-            return new CalendarDateViewModel
-            {
-                Date = start.Date.AddDays(i),
-                Bookings = new List<CalendarBookingViewModel>(),
-                PreparationTimes = new List<PreparationTimeViewModel>()
-            };
+            return new CalendarDateViewModel(start.Date.AddDays(i), new List<CalendarBookingViewModel>(), new List<PreparationTimeViewModel>());
         }
 
         private void Validate(int nights, int rentalId)
