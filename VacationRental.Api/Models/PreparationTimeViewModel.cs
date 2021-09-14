@@ -2,7 +2,12 @@
 {
     public class PreparationTimeViewModel
     {
-        public int Unit { get; set; }
+        public PreparationTimeViewModel(int unit)
+        {
+            Unit = unit;
+        }
+
+        public int Unit { get; }
 
         public override bool Equals(object obj)
         {
