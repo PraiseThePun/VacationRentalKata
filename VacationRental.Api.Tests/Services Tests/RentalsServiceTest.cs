@@ -18,7 +18,7 @@ namespace VacationRental.Api.Tests
             var dict = new Dictionary<int, RentalViewModel>();
             rentalService = new RentalService(dict);
             testModel = new RentalBindingModel() { PreparationTimeInDays = 1, Units = 1 };
-            testKey = new ResourceIdViewModel() { Id = ID };
+            testKey = new ResourceIdViewModel(ID);
         }
 
         [Fact]

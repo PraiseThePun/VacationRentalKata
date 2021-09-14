@@ -28,7 +28,7 @@ namespace VacationRental.Api.Controllers
         [HttpPost]
         public ResourceIdViewModel Post(BookingBindingModel model)
         {
-            var key = new ResourceIdViewModel { Id = bookingsService.GetNextKey() };
+            var key = new ResourceIdViewModel(bookingsService.GetNextKey());
 
             bookingsService.Add(model, key);
 

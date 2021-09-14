@@ -29,7 +29,7 @@ namespace VacationRental.Api.Tests
             bookingsService = new BookingService(rentals, bookings);
 
             testModel = new BookingBindingModel() { Nights = 1, RentalId = 1, Start = DateTime.Today, Unit = 1 };
-            testKey = new ResourceIdViewModel() { Id = ID };
+            testKey = new ResourceIdViewModel(ID);
         }
 
         [Fact]
