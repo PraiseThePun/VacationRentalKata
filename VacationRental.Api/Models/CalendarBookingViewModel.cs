@@ -2,8 +2,14 @@
 {
     public class CalendarBookingViewModel
     {
-        public int Id { get; set; }
-        public int Unit { get; set; }
+        public CalendarBookingViewModel(int id, int unit)
+        {
+            Id = id;
+            Unit = unit;
+        }
+
+        public int Id { get; }
+        public int Unit { get; }
 
         public override bool Equals(object obj)
         {

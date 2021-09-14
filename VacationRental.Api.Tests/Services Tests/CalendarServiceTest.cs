@@ -48,7 +48,7 @@ namespace VacationRental.Api.Tests.Services_Tests
         [Fact]
         public void CreateCalendarReturnsAViewModel()
         {
-            var bookings = new List<CalendarBookingViewModel>() { new CalendarBookingViewModel() { Id = 1, Unit = 1 } };
+            var bookings = new List<CalendarBookingViewModel>() { new CalendarBookingViewModel(1, 1)};
             var preparationTimes = new List<PreparationTimeViewModel>() { new PreparationTimeViewModel() { Unit = 1 } };
             var dates = new List<CalendarDateViewModel>() { new CalendarDateViewModel() { Date = DateTime.Today, Bookings = bookings, PreparationTimes = preparationTimes } };
             var expected = new CalendarViewModel() { Dates = dates, RentalId = ID };

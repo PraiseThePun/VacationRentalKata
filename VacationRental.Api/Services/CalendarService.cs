@@ -46,7 +46,7 @@ namespace VacationRental.Api.Services
 
                 if (booking.Start <= date.Date && booking.Start.AddDays(booking.Nights + rental.PreparationTimeInDays) > date.Date)
                 {
-                    date.Bookings.Add(new CalendarBookingViewModel { Id = booking.Id, Unit = booking.Unit });
+                    date.Bookings.Add(new CalendarBookingViewModel(booking.Id, booking.Unit));
                     date.PreparationTimes.Add(new PreparationTimeViewModel() { Unit = booking.Unit });
                 }
             }
