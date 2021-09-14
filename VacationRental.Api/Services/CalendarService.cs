@@ -24,32 +24,41 @@ namespace VacationRental.Api.Services
 
             for (int i = 0; i < nights; i++)
             {
-                var date = new CalendarDateViewModel
-                {
-                    Date = start.Date.AddDays(i),
-                    Bookings = new List<CalendarBookingViewModel>(),
-                    PreparationTimes = new List<PreparationTimeViewModel>()
-                };
+                var date = CreateView(start, i);
 
-                foreach (var booking in bookingService.GetAllBookings().Values)
-                {
-                    var rental = rentalService.Find(booking.RentalId);
+                FindRentalBookings(rentalId, date);
 
-                    if (booking.RentalId == rentalId
-                        && booking.Start <= date.Date && booking.Start.AddDays(booking.Nights + rental.PreparationTimeInDays) > date.Date)
-                    {
-                        date.Bookings.Add(new CalendarBookingViewModel { Id = booking.Id, Unit = booking.Unit });
-                        date.PreparationTimes.Add(new PreparationTimeViewModel() { Unit = booking.Unit });
-                    }
-
-                    dates.Add(date);
-                }
+                dates.Add(date);
             }
 
             return new CalendarViewModel()
             {
                 RentalId = rentalId,
                 Dates = dates
+            };
+        }
+
+        private void FindRentalBookings(int rentalId, CalendarDateViewModel date)
+        {
+            foreach (var booking in bookingService.GetBookingsByRentalId(rentalId).Values)
+            {
+                var rental = rentalService.Find(rentalId);
+
+                if (booking.Start <= date.Date && booking.Start.AddDays(booking.Nights + rental.PreparationTimeInDays) > date.Date)
+                {
+                    date.Bookings.Add(new CalendarBookingViewModel { Id = booking.Id, Unit = booking.Unit });
+                    date.PreparationTimes.Add(new PreparationTimeViewModel() { Unit = booking.Unit });
+                }
+            }
+        }
+
+        private static CalendarDateViewModel CreateView(DateTime start, int i)
+        {
+            return new CalendarDateViewModel
+            {
+                Date = start.Date.AddDays(i),
+                Bookings = new List<CalendarBookingViewModel>(),
+                PreparationTimes = new List<PreparationTimeViewModel>()
             };
         }
 

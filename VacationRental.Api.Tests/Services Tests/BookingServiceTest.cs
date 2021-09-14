@@ -125,5 +125,26 @@ namespace VacationRental.Api.Tests
             Assert.Equal(2, bookingsService.Find(ID).Nights);
             Assert.Equal(DateTime.MinValue, bookingsService.Find(ID).Start);
         }
+
+        [Fact]
+        public void FindBookingsByIdReturnsByRequestedId()
+        {
+            var expectedBooking = new BookingViewModel() { Id = ID, Nights = 1, RentalId = 1, Start = DateTime.Today, Unit = 1 };
+            var expectedDictionary = new Dictionary<int, BookingViewModel>()
+            {
+                {1, expectedBooking }
+            };
+            var ignoredBooking = new BookingViewModel() { Id = ID, Nights = 1, RentalId = 2, Start = DateTime.Today, Unit = 1 };
+            var bookingsDictionary = new Dictionary<int, BookingViewModel>
+            {
+                { 1, expectedBooking },
+                { 2, ignoredBooking }
+            };
+            bookingsService = new BookingService(rentals, bookingsDictionary);
+
+            var actual = bookingsService.GetBookingsByRentalId(ID);
+
+            Assert.Equal(expectedDictionary, actual);
+        }
     }
 }

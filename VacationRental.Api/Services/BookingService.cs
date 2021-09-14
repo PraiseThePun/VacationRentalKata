@@ -55,6 +55,11 @@ namespace VacationRental.Api.Services
             return bookingsRepository.GetAllBookings();
         }
 
+        public IDictionary<int, BookingViewModel> GetBookingsByRentalId(int rentalId)
+        {
+            return bookingsRepository.FindBookingsByRentalId(rentalId);
+        }
+
         private int FindRentals(BookingBindingModel model)
         {
             var rental = rentalService.Find(model.RentalId);
