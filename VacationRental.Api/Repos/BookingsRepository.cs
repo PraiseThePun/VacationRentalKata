@@ -39,5 +39,10 @@ namespace VacationRental.Api.Repos
         {
             return bookings;
         }
+
+        public int GetNextKey()
+        {
+            return bookings.Keys.Count + 1;
+        }
     }
 }

@@ -47,7 +47,7 @@ namespace VacationRental.Api.Services
 
         public int GetNextKey()
         {
-            return bookingsRepository.GetAllBookings().Keys.Count + 1;
+            return bookingsRepository.GetNextKey();
         }
 
         public IDictionary<int, BookingViewModel> GetAllBookings()

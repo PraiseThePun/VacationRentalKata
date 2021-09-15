@@ -16,6 +16,8 @@ namespace VacationRental.Api.Services
 
         public void Add(RentalBindingModel model, ResourceIdViewModel key)
         {
+            Validate(model);
+
             repository.Add(model, key);
         }
 
@@ -35,13 +37,22 @@ namespace VacationRental.Api.Services
 
         public int GetNextKey()
         {
-            return repository.GetAllRentals().Keys.Count + 1;
+            return repository.GetNextKey();
         }
 
         private void CheckExists(int id)
         {
             if (!repository.GetAllRentals().ContainsKey(id))
                 throw new ApplicationException("Rental not found");
+        }
+
+        private void Validate(RentalBindingModel model)
+        {
+            if(model.Units < 0)
+                throw new ApplicationException("Units must be bigger than 0");
+
+            if (model.PreparationTimeInDays <= 0)
+                throw new ApplicationException("Preparation time must be a positive integer.");
         }
     }
 }
