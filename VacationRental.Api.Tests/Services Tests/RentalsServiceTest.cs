@@ -24,7 +24,24 @@ namespace VacationRental.Api.Tests
         [Fact]
         public void FindThrowsExceptionIfDictionaryDoesNotContainTheGivenKey()
         {
-            Assert.Throws<ApplicationException>(() => rentalService.Find(ID));
+            var exception = Assert.Throws<ApplicationException>(() => rentalService.Find(ID));
+            Assert.Equal("Rental not found", exception.Message);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void AddFailsIfUnitsIsZeroOrLower(int units)
+        {
+            var exception = Assert.Throws<ApplicationException>(() => rentalService.Add(new RentalBindingModel() { PreparationTimeInDays = 1, Units = units }, testKey));
+            Assert.Equal("Units must be bigger than 0", exception.Message);
+        }
+
+        [Fact]
+        public void AddFailsIfPreparationTimeInDaysIsNegative()
+        {
+            var exception = Assert.Throws<ApplicationException>(() => rentalService.Add(new RentalBindingModel() { PreparationTimeInDays = -1, Units = 1 }, testKey));
+            Assert.Equal("Preparation time must be a positive integer", exception.Message);
         }
 
         [Fact]

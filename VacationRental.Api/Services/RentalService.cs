@@ -48,11 +48,11 @@ namespace VacationRental.Api.Services
 
         private void Validate(RentalBindingModel model)
         {
-            if(model.Units < 0)
+            if(model.Units <= 0)
                 throw new ApplicationException("Units must be bigger than 0");
 
             if (model.PreparationTimeInDays <= 0)
-                throw new ApplicationException("Preparation time must be a positive integer.");
+                throw new ApplicationException("Preparation time must be a positive integer");
         }
     }
 }

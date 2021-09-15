@@ -21,7 +21,8 @@ namespace VacationRental.Api.Tests
         {
             var postRentalRequest = new RentalBindingModel
             {
-                Units = 2
+                Units = 2,
+                PreparationTimeInDays = 1
             };
 
             ResourceIdViewModel postRentalResult = await CreateRequest(postRentalRequest);
@@ -30,7 +31,8 @@ namespace VacationRental.Api.Tests
             {
                 RentalId = postRentalResult.Id,
                 Nights = 2,
-                Start = new DateTime(2000, 01, 02)
+                Start = new DateTime(2000, 01, 02),
+                Unit = 1
             };
 
             ResourceIdViewModel postBooking1Result = await PostBookingRequest(postBooking1Request);
@@ -39,7 +41,8 @@ namespace VacationRental.Api.Tests
             {
                 RentalId = postRentalResult.Id,
                 Nights = 2,
-                Start = new DateTime(2000, 01, 03)
+                Start = new DateTime(2000, 01, 03),
+                Unit = 2
             };
 
             ResourceIdViewModel postBooking2Result = await PostBookingRequest(postBooking2Request);
@@ -72,11 +75,11 @@ namespace VacationRental.Api.Tests
             Assert.Contains(getCalendarResult.Dates[2].Bookings, x => x.Id == postBooking2Result.Id);
 
             Assert.Equal(new DateTime(2000, 01, 04), getCalendarResult.Dates[3].Date);
-            Assert.Single(getCalendarResult.Dates[3].Bookings);
             Assert.Contains(getCalendarResult.Dates[3].Bookings, x => x.Id == postBooking2Result.Id);
 
             Assert.Equal(new DateTime(2000, 01, 05), getCalendarResult.Dates[4].Date);
-            Assert.Empty(getCalendarResult.Dates[4].Bookings);
+            Assert.Single(getCalendarResult.Dates[4].Bookings);
+            Assert.Contains(getCalendarResult.Dates[4].Bookings, x => x.Id == postBooking2Result.Id);
         }
 
         private async Task<ResourceIdViewModel> PostBookingRequest(BookingBindingModel postBooking1Request)

@@ -111,6 +111,23 @@ namespace VacationRental.Api.Tests
         }
 
         [Fact]
+        public void UpdateFailsIfTheNewValueIsAlreadyBooked()
+        {
+            bookingsService.Add(testModel, testKey);
+
+            var blockingModel = testModel;
+            blockingModel.Start = DateTime.Today.AddDays(testModel.Nights + testRental.PreparationTimeInDays);
+
+            bookingsService.Add(blockingModel, new ResourceIdViewModel(bookingsService.GetNextKey()));
+
+            var modifiedModel = testModel;
+            modifiedModel.Nights = 2;
+
+            var exception = Assert.Throws<ApplicationException>(() => bookingsService.Update(ID, modifiedModel));
+            Assert.Equal("Not available", exception.Message);
+        }
+
+        [Fact]
         public void UpdateModifiesAnObject()
         {
             bookingsService.Add(testModel, testKey);

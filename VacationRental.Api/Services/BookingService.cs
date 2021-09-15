@@ -23,12 +23,16 @@ namespace VacationRental.Api.Services
         {
             var rental = rentalService.Find(model.RentalId);
             Validate(model);
+            IsAvailable(model, rental);
 
+            bookingsRepository.Add(model, key);
+        }
+
+        private void IsAvailable(BookingBindingModel model, RentalViewModel rental)
+        {
             var count = FindRentals(model);
             if (count >= rental.Units)
                 throw new ApplicationException("Not available");
-
-            bookingsRepository.Add(model, key);
         }
 
         public BookingViewModel Find(int id)
@@ -41,6 +45,7 @@ namespace VacationRental.Api.Services
         public BookingViewModel Update(int id, BookingBindingModel value)
         {
             CheckExists(id);
+            IsAvailable(value, rentalService.Find(value.RentalId));
 
             return bookingsRepository.Update(id, value);
         }
