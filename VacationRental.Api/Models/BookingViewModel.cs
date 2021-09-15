@@ -19,12 +19,6 @@ namespace VacationRental.Api.Models
         public int Nights { get; }
         public int Unit { get; }
 
-        //public int Id { get; set; }
-        //public int RentalId { get; set; }
-        //public DateTime Start { get; set; }
-        //public int Nights { get; set; }
-        //public int Unit { get; set; }
-
         public override bool Equals(object obj)
         {
             if(obj is BookingViewModel)
