@@ -25,12 +25,7 @@ namespace VacationRental.Api.Tests
                 Units = 4
             };
 
-            ResourceIdViewModel postRentalResult;
-            using (var postRentalResponse = await _client.PostAsJsonAsync($"/api/v1/rentals", postRentalRequest))
-            {
-                Assert.True(postRentalResponse.IsSuccessStatusCode);
-                postRentalResult = await postRentalResponse.Content.ReadAsAsync<ResourceIdViewModel>();
-            }
+            ResourceIdViewModel postRentalResult = await PostRental(postRentalRequest);
 
             var postBookingRequest = new BookingBindingModel
             {
@@ -65,12 +60,7 @@ namespace VacationRental.Api.Tests
                 Units = 1
             };
 
-            ResourceIdViewModel postRentalResult;
-            using (var postRentalResponse = await _client.PostAsJsonAsync($"/api/v1/rentals", postRentalRequest))
-            {
-                Assert.True(postRentalResponse.IsSuccessStatusCode);
-                postRentalResult = await postRentalResponse.Content.ReadAsAsync<ResourceIdViewModel>();
-            }
+            ResourceIdViewModel postRentalResult = await PostRental(postRentalRequest);
 
             var postBooking1Request = new BookingBindingModel
             {
@@ -97,6 +87,15 @@ namespace VacationRental.Api.Tests
                 {
                 }
             });
+        }
+
+        private async Task<ResourceIdViewModel> PostRental(RentalBindingModel postRentalRequest)
+        {
+            using (var postRentalResponse = await _client.PostAsJsonAsync($"/api/v1/rentals", postRentalRequest))
+            {
+                Assert.True(postRentalResponse.IsSuccessStatusCode);
+                return await postRentalResponse.Content.ReadAsAsync<ResourceIdViewModel>();
+            }
         }
     }
 }
