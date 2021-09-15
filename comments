@@ -1,0 +1,4 @@
+The solution is in .net core 2.2. I had to instal the framework to run the project and even then swagger would not start, so I can't properly test this.
+I would have changed the properties of the models to be readonly and set them in a constructor, but I am unsure if this is allowed.
+I'd like to change some of the exceptions to, for example, BadRequest or ArgumentException but I am unsure of how the API handles exceptions.
+Given how little functionality the repos have I decided that the service test can also double as repos test. Given more time I'd be a nice to have to prepare for future implementations.
